@@ -7,6 +7,15 @@ function App() {
     const canvas = canvasREf.current;
     const ctx = canvas?.getContext("2d");
 
+    const savedImage = localStorage.getItem("savedDrawing");
+    if(savedImage && ctx) {
+        const img= new Image;
+        img.onload=()=> {
+            ctx.drawImage(img,0,0);
+        }
+        img.src=savedImage
+    }
+
     let drawing = false;
 
     const startDrawing = () => {
@@ -15,6 +24,8 @@ function App() {
     const stopDrawing = () => {
       drawing = false;
       ctx?.beginPath();
+      const dataURL=canvas?.toDataURL();
+      localStorage.setItem('savedDrawing',dataURL || "")
     };
     const draw = (e: MouseEvent) => {
       if (!drawing || !ctx) return;
